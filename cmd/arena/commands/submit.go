@@ -376,14 +376,15 @@ var (
 	submitLong = `Submit a job.
 
 Available Commands:
-  tfjob,tf             Submit a TFJob.
-  horovod,hj           Submit a Horovod Job.
-  mpijob,mpi           Submit a MPIJob.
-  pytorchjob,pytorch   Submit a PyTorchJob.
-  standalonejob,sj     Submit a standalone Job.
-  tfserving,tfserving  Submit a Serving Job.
-  volcanojob,vj        Submit a VolcanoJob.
-  etjob,et           Submit a ETJob.
+  tfjob,tf                 Submit a TFJob.
+  horovod,hj               Submit a Horovod Job.
+  mpijob,mpi               Submit a MPIJob.
+  pytorchjob,pytorch       Submit a PyTorchJob.
+  standalonejob,sj         Submit a standalone Job.
+  tfserving,tfserving      Submit a Serving Job.
+  volcanojob,vj            Submit a VolcanoJob.
+  etjob,et                 Submit an ETJob.
+  elasticdljob,elasticdl   Submit an ElasticDLJob.
     `
 )
 

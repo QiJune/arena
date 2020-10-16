@@ -40,7 +40,6 @@ type submitElasticDLJobArgs struct {
 	MinibatchSize         int    `yaml:"minibatchSize"`
 	NumMinibatchesPerTask int    `yaml:"numMimibatchesPerTask"`
 	EvaluationStep        int    `yaml:"evaluationStep"`
-	Image                 string `yaml:"image"`
 	ImagePullPolicy       string `yaml:"imagePullPolicy"`
 	Volume                string `yaml:"volume"`
 	MasterPriority        string `yaml:"masterPriority"`
@@ -110,13 +109,12 @@ func NewSubmitElasticDLJobCommand() *cobra.Command {
 	command.Flags().IntVar(&submitArgs.NumMinibatchesPerTask, "numMinibatchesPerTask", 0, "")
 	command.Flags().IntVar(&submitArgs.EvaluationStep, "evaluationStep", 0, "")
 
-	command.Flags().StringVar(&submitArgs.Image, "image", "", "")
-	command.Flags().StringVar(&submitArgs.ImagePullPolicy, "imagePullPolict", "", "")
+	command.Flags().StringVar(&submitArgs.ImagePullPolicy, "imagePullPolicy", "", "")
 	command.Flags().StringVar(&submitArgs.Volume, "volume", "", "")
 
 	command.Flags().StringVar(&submitArgs.MasterPriority, "masterPriority", "", "")
-	command.Flags().StringVar(&submitArgs.MasterCPU, "masterCPU", "")
-	command.Flags().StringVar(&submitArgs.MasterMemory, "masterMemory", "")
+	command.Flags().StringVar(&submitArgs.MasterCPU, "masterCPU", "", "")
+	command.Flags().StringVar(&submitArgs.MasterMemory, "masterMemory", "", "")
 
 	command.Flags().IntVar(&submitArgs.PSCount, "psCount", 0, "")
 	command.Flags().StringVar(&submitArgs.PSPriority, "psPriority", "", "")
@@ -136,7 +134,7 @@ func (submitArgs *submitElasticDLJobArgs) prepare(args []string) (err error) {
 
 	commonArgs := &submitArgs.submitArgs
 
-	err := commonArgs.transform()
+	err = commonArgs.transform()
 	if err != nil {
 		return err
 	}
