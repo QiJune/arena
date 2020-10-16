@@ -408,6 +408,7 @@ func NewSubmitCommand() *cobra.Command {
 
 	command.AddCommand(NewVolcanoJobCommand())
 	command.AddCommand(NewSubmitETJobCommand())
+	command.AddCommand(NewSubmitElasticDLJobCommand())
 
 	return command
 }
