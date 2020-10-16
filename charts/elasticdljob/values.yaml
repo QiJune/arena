@@ -1,0 +1,27 @@
+modelZoo: model_zoo
+modelDef: mnist.mnist_functional_api.custom_model
+trainingData: /data/mnist/train
+validationData: /data/mnist/val
+output: /data/output
+numEpochs: 2
+minibatchSize: 64
+numMinibatchesPerTask: 2
+evaluationStep: 1000
+
+image: o0o0o/elasticdl:mnist
+imagePullPolicy: Always
+volume: "host_path=/host_data,mount_path=/data"
+
+masterPriority: ""
+masterCPU: 0.5
+masterMemory: 521Mi
+
+psCount: 1
+psPriority: ""
+psCPU: 0.5
+psMemory: 512Mi
+
+workerCount: 1
+workerPriority: ""
+workerCPU: 0.5
+workerMemory: 512Mi
