@@ -126,6 +126,7 @@ func NewSubmitElasticDLJobCommand() *cobra.Command {
 	command.Flags().StringVar(&submitArgs.WorkerCPU, "workerCPU", "", "")
 	command.Flags().StringVar(&submitArgs.WorkerMemory, "workerMemory", "", "")
 
+	log.Debugf("pytorchjob command: %v", command)
 	return command
 }
 
