@@ -26,23 +26,22 @@ ENV OS_ARCH $OS_ARCH
 ENV COMMIT $COMMIT
 ENV TARGET $TARGET
 
-RUN mkdir -p /go/src/github.com/kubeflow/arena
-
-WORKDIR /go/src/github.com/kubeflow/arena
-COPY . .
-
-RUN make $TARGET
-
 RUN wget https://storage.googleapis.com/kubernetes-helm/helm-$HELM_VERSION-$OS_ARCH.tar.gz && \
     tar -xvf helm-$HELM_VERSION-$OS_ARCH.tar.gz && \
     mv $OS_ARCH/helm /usr/local/bin/helm && \
-    chmod u+x /usr/local/bin/helm && \
-    chmod u+x /go/src/github.com/kubeflow/arena/install.sh
+    chmod u+x /usr/local/bin/helm
 
 RUN OS=$(echo $OS_ARCH | cut -f1 -d-) && \
     ARCH=$(echo $OS_ARCH | cut -f2 -d-) && \
     curl -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/${KUBE_VERSION}/bin/${OS}/${ARCH}/kubectl && \
     chmod +x /usr/local/bin/kubectl
+
+RUN mkdir -p /go/src/github.com/kubeflow/arena
+WORKDIR /go/src/github.com/kubeflow/arena
+COPY . .
+
+RUN make $TARGET
+RUN chmod u+x /go/src/github.com/kubeflow/arena/install.sh
 
 
 #**********************************************************************
