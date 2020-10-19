@@ -29,32 +29,6 @@ var (
 	elasticdljobChart = util.GetChartsFolder() + "/elasticdljob"
 )
 
-type submitElasticDLJobArgs struct {
-	submitArgs            `yaml:",inline"`
-	ModelZoo              string `yaml:"modelZoo"`
-	ModelDef              string `yaml:"modelDef"`
-	TrainingData          string `yaml:"trainingData"`
-	ValidationData        string `yaml:"validationData"`
-	Output                string `yaml:"output"`
-	NumEpochs             int    `yaml:"numEpochs"`
-	MinibatchSize         int    `yaml:"minibatchSize"`
-	NumMinibatchesPerTask int    `yaml:"numMimibatchesPerTask"`
-	EvaluationStep        int    `yaml:"evaluationStep"`
-	ImagePullPolicy       string `yaml:"imagePullPolicy"`
-	Volume                string `yaml:"volume"`
-	MasterPriority        string `yaml:"masterPriority"`
-	MasterCPU             string `yaml:"masterCPU"`
-	MasterMemory          string `yaml:"masterMemory`
-	PSCount               int    `yaml:"psCount"`
-	PSPriority            string `yaml:"psPriority"`
-	PSCPU                 string `yaml:"psCPU"`
-	PSMemory              string `yaml:"psMemory"`
-	WorkerCount           int    `yaml:"workerCount"`
-	WorkerPriority        string `yaml:"workerPriority"`
-	WorkerCPU             string `yaml:"workerCPU"`
-	WorkerMemory          string `yaml:"workerMemory"`
-}
-
 func NewSubmitElasticDLJobCommand() *cobra.Command {
 	var (
 		submitArgs submitElasticDLJobArgs
@@ -62,15 +36,17 @@ func NewSubmitElasticDLJobCommand() *cobra.Command {
 
 	submitArgs.Mode = "elasticdljob"
 
-	command := &cobra.Command{
+	var command = &cobra.Command{
 		Use:     "elasticdljob",
 		Short:   "Sumit ElasticDLJob as training job.",
 		Aliases: []string{"elasticdl"},
 		Run: func(cmd *cobra.Command, args []string) {
-			if len(args) == 0 {
-				cmd.HelpFunc()(cmd, args)
-				os.Exit(1)
-			}
+			log.Info("hello world")
+			log.Info(args)
+			// if len(args) == 0 {
+			// cmd.HelpFunc()(cmd, args)
+			// os.Exit(1)
+			// }
 
 			util.SetLogLevel(logLevel)
 			setupKubeconfig()
@@ -97,7 +73,7 @@ func NewSubmitElasticDLJobCommand() *cobra.Command {
 		},
 	}
 
-	submitArgs.addCommonFlags(command)
+	log.Debugf("elasticdljob command: %v", command)
 
 	command.Flags().StringVar(&submitArgs.ModelZoo, "modelZoo", "", "")
 	command.Flags().StringVar(&submitArgs.ModelDef, "modelDef", "", "")
@@ -107,7 +83,7 @@ func NewSubmitElasticDLJobCommand() *cobra.Command {
 	command.Flags().IntVar(&submitArgs.NumEpochs, "numEpochs", 0, "")
 	command.Flags().IntVar(&submitArgs.MinibatchSize, "minibatchSize", 0, "")
 	command.Flags().IntVar(&submitArgs.NumMinibatchesPerTask, "numMinibatchesPerTask", 0, "")
-	command.Flags().IntVar(&submitArgs.EvaluationStep, "evaluationStep", 0, "")
+	command.Flags().IntVar(&submitArgs.EvaluationSteps, "evaluationSteps", 0, "")
 
 	command.Flags().StringVar(&submitArgs.ImagePullPolicy, "imagePullPolicy", "", "")
 	command.Flags().StringVar(&submitArgs.Volume, "volume", "", "")
@@ -126,8 +102,35 @@ func NewSubmitElasticDLJobCommand() *cobra.Command {
 	command.Flags().StringVar(&submitArgs.WorkerCPU, "workerCPU", "", "")
 	command.Flags().StringVar(&submitArgs.WorkerMemory, "workerMemory", "", "")
 
-	log.Debugf("pytorchjob command: %v", command)
+	submitArgs.addCommonFlags(command)
+	log.Debugf("elasticdljob command: %v", command)
 	return command
+}
+
+type submitElasticDLJobArgs struct {
+	submitArgs            `yaml:",inline"`
+	ModelZoo              string `yaml:"modelZoo"`
+	ModelDef              string `yaml:"modelDef"`
+	TrainingData          string `yaml:"trainingData"`
+	ValidationData        string `yaml:"validationData"`
+	Output                string `yaml:"output"`
+	NumEpochs             int    `yaml:"numEpochs"`
+	MinibatchSize         int    `yaml:"minibatchSize"`
+	NumMinibatchesPerTask int    `yaml:"numMimibatchesPerTask"`
+	EvaluationSteps       int    `yaml:"evaluationSteps"`
+	ImagePullPolicy       string `yaml:"imagePullPolicy"`
+	Volume                string `yaml:"volume"`
+	MasterPriority        string `yaml:"masterPriority"`
+	MasterCPU             string `yaml:"masterCPU"`
+	MasterMemory          string `yaml:"masterMemory"`
+	PSCount               int    `yaml:"psCount"`
+	PSPriority            string `yaml:"psPriority"`
+	PSCPU                 string `yaml:"psCPU"`
+	PSMemory              string `yaml:"psMemory"`
+	WorkerCount           int    `yaml:"workerCount"`
+	WorkerPriority        string `yaml:"workerPriority"`
+	WorkerCPU             string `yaml:"workerCPU"`
+	WorkerMemory          string `yaml:"workerMemory"`
 }
 
 func (submitArgs *submitElasticDLJobArgs) prepare(args []string) (err error) {
@@ -163,7 +166,7 @@ func submitElasticDLJob(args []string, submitArgs *submitElasticDLJobArgs) (err 
 		return err
 	}
 
-	err = workflow.SubmitJob(name, submitArgs.Mode, namespace, submitArgs, pytorchjobChart, submitArgs.addHelmOptions()...)
+	err = workflow.SubmitJob(name, submitArgs.Mode, namespace, submitArgs, elasticdljobChart, submitArgs.addHelmOptions()...)
 	if err != nil {
 		return err
 	}

@@ -13,61 +13,61 @@ spec:
 {{- if .Values.cleanPodPolicy }}
   cleanPodPolicy: {{ .Values.cleanPodPolicy }}
 {{- end }}
-elasticdlReplicaSpecs:
-  Master:
-    replica: 1
-    restartPolicy: Never
-    template:
-      spec:
-        containers:
-        - args:
-          - -c
-          - set -o pipefail; python -m elasticdl.python.master.main
-            --job_name {{ .Release.Name }}
-            --namespace {{ .Values.namespace }}
-            --worker_image {{ .Values.image }}
-            --model_zoo {{ .Values.modelZoo }}
-            --model_def {{ .Values.modelDef }}
-            --num_epochs {{ .Values.numEpochs }}
-            --minibatch_size {{ .Values.minibatchSize }}
-            --num_minibatches_per_task {{ .Values.numMiniBatchesPertask }}
-            --training_data {{ .Values.trainingData }}
-            --validation_data {{ .Values.validationData }}
-            --output {{ .Values.output }}
-            --evaluation_steps {{ .Values.evaluationSteps }}
-            --num_workers {{ .Values.workerCount }}
-            --worker_resource_requests {{ .Values.workerResourceRequests }}
-            --worker_pod_priority {{ .Values.workerPriority }}
-            --num_ps_pods {{ .Values.PSCount }}
-            --ps_resource_requests {{ .Values.PSResourceRequests }}
-            --ps_pod_priority {{ .Values.PSPriority }}
-            --volume {{ .Values.volume }}
-            --image_pull_policy {{ .Values.imagePullPolicy }}
-            --restart_policy 'Never'
-            --checkpoint_steps '0'
-            --checkpoint_dir ''
-            --keep_checkpoint_max '0'
-            --distribution_strategy 'ParameterServerStrategy'
-          command:
-          - /bin/bash
-          env:
-          - name: MY_POD_IP
-            valueFrom:
-              fieldRef:
-                fieldPath: status.PodIP
-          image: {{ .Values.image }}
-          imagePullPolicy: {{ .Values.imagePullPolicy }}
-          name: elasticdl-{{ .Release.Name }}-master
-          resources:
-            requests:
-              cpu: {{ .Values.master.cpu }}
-              memory: {{ .Values.master.memory }}
-          volumeMounts:
-          - mountPath: /data
+  elasticdlReplicaSpecs:
+    Master:
+      replicas: 1
+      restartPolicy: Never
+      template:
+        spec:
+          containers:
+          - args:
+            - -c
+            - set -o pipefail; python -m elasticdl.python.master.main
+              --job_name {{ .Release.Name }}
+              --namespace {{ .Values.namespace }}
+              --worker_image {{ .Values.image }}
+              --model_zoo {{ .Values.modelZoo }}
+              --model_def {{ .Values.modelDef }}
+              --num_epochs {{ .Values.numEpochs }}
+              --minibatch_size {{ .Values.minibatchSize }}
+              --num_minibatches_per_task {{ .Values.numMiniBatchesPertask }}
+              --training_data {{ .Values.trainingData }}
+              --validation_data {{ .Values.validationData }}
+              --output {{ .Values.output }}
+              --evaluation_steps {{ .Values.evaluationSteps }}
+              --num_workers {{ .Values.workerCount }}
+              --worker_resource_requests {{ .Values.workerResourceRequests }}
+              --worker_pod_priority {{ .Values.workerPriority }}
+              --num_ps_pods {{ .Values.PSCount }}
+              --ps_resource_requests {{ .Values.PSResourceRequests }}
+              --ps_pod_priority {{ .Values.PSPriority }}
+              --volume {{ .Values.volume }}
+              --image_pull_policy {{ .Values.imagePullPolicy }}
+              --restart_policy 'Never'
+              --checkpoint_steps '0'
+              --checkpoint_dir ''
+              --keep_checkpoint_max '0'
+              --distribution_strategy 'ParameterServerStrategy'
+            command:
+            - /bin/bash
+            env:
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.PodIP
+            image: {{ .Values.image }}
+            imagePullPolicy: {{ .Values.imagePullPolicy }}
+            name: elasticdl-{{ .Release.Name }}-master
+            resources:
+              requests:
+                cpu: {{ .Values.masterCPU }}
+                memory: {{ .Values.masterMemory }}
+            volumeMounts:
+            - mountPath: /data
+              name: elasticdl-test-mnist-master-volume-0
+          priorityClassName: ''
+          restartPolicy: Never
+          volumes:
+          - hostPath:
+              path: /data
             name: elasticdl-test-mnist-master-volume-0
-        priorityClassName: ''
-        restartPolicy: Never
-        volumes:
-        - hostPath:
-            path: /data
-          name: elasticdl-test-mnist-master-volume-0

@@ -6,22 +6,22 @@ output: /data/output
 numEpochs: 2
 minibatchSize: 64
 numMinibatchesPerTask: 2
-evaluationStep: 1000
+evaluationSteps: 1000
 
 image: o0o0o/elasticdl:mnist
 imagePullPolicy: Always
 volume: "host_path=/host_data,mount_path=/data"
 
 masterPriority: ""
-masterCPU: 0.5
+masterCPU: 500m
 masterMemory: 521Mi
 
 psCount: 1
 psPriority: ""
-psCPU: 0.5
+psCPU: 500m
 psMemory: 512Mi
 
 workerCount: 1
 workerPriority: ""
-workerCPU: 0.5
+workerCPU: 500m
 workerMemory: 512Mi
